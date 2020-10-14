@@ -1,0 +1,7 @@
+# Ignoring files according to http://microchip.wikidot.com/faq:72
+SW3302.X/build/
+SW3302.X/dist/
+#Ingoring private Makefiles, to create them open the MPLAB IDE or use the C:\Program Files (x86)\Microchip\MPLABX\<VERSION>\mplab_ide\bin\prjMakefilesGenerator.bat script
+SW3302.X/nbproject/Makefile-*
+SW3302.X/nbproject/Package-*
+SW3302.X/nbproject/private/
