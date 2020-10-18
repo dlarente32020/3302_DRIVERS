@@ -5,10 +5,10 @@
     Adam Electronics, Inc.
 
   @File Name
-    tlc5947.h
+    tlc5941q1.h
 
   @Summary
-    TLC5947, Texas Instruments PWM controller IC header file
+    TLC5941-Q1, Texas Instruments PWM controller IC header file
 
   @Description
     ::todo::
@@ -16,8 +16,8 @@
  */
 /* ************************************************************************** */
 
-#ifndef _TLC5947_H    /* Guard against multiple inclusion */
-#define _TLC5947_H
+#ifndef _TLC5941Q1_H    /* Guard against multiple inclusion */
+#define _TLC5941Q1_H
 
 
 /* ************************************************************************** */
@@ -78,35 +78,39 @@ extern "C" {
 */
 /* ===== USER DATA ===========================================================*/
 // no of daisy-chained chips
-#define TLC5947_NO_OF_CHIPS                     (1u)
+#define TLC5941Q1_NO_OF_CHIPS                     (1u)
 //
-#define TLC5947_NO_OF_ACTIVE_CHANNELS_PER_CHIP  (22u)
+#define TLC5941Q1_NO_OF_ACTIVE_CHANNELS_PER_CHIP  (16u)
     
 // size of gs data register location (GS_SIZE_1B for 8-bit or GS_SIZE_2B for 16-bit)
-#define TLC5947_GS_DATA_SIZE                    (GS_SIZE_2B)
+#define TLC5941Q1_GS_DATA_SIZE                    (GS_SIZE_2B)
 // is gs inverted? (inverted = max value corresponds to minimum duty-cycle))
-#define TLC5947_IS_GS_DATA_INVERTED             (TRUE)
+#define TLC5941Q1_IS_GS_DATA_INVERTED             (FALSE)
 /* ========================================================================== */
 
 /* ===== DRIVER DATA - DO NOT TOUCH ==========================================*/
 // no of output channels per chip
-#define TLC5947_NO_OF_CHANNELS_PER_CHIP         (24u)
+#define TLC5941Q1_NO_OF_CHANNELS_PER_CHIP         (16u)
 
 // no of bits used to represent gs data per channel
-#define TLC5947_NO_OF_GS_BITS_PER_CHANNEL       (12u)
+#define TLC5941Q1_NO_OF_GS_BITS_PER_CHANNEL       (12u)
+// no of bits used to represent dc data per channel
+#define TLC5941Q1_NO_OF_DC_BITS_PER_CHANNEL       (6u)
 
-#define TLC5947_NO_OF_BITS_PER_CSR              (TLC5947_NO_OF_CHANNELS_PER_CHIP * TLC5947_NO_OF_GS_BITS_PER_CHANNEL)
-#define TLC5947_NO_OF_BYTES_PER_CSR             (TLC5947_NO_OF_BITS_PER_CSR / (8u))
+#define TLC5941Q1_NO_OF_BITS_PER_CSR              (TLC5941Q1_NO_OF_CHANNELS_PER_CHIP * TLC5941Q1_NO_OF_GS_BITS_PER_CHANNEL)
+#define TLC5941Q1_NO_OF_BYTES_PER_CSR             (TLC5941Q1_NO_OF_BITS_PER_CSR / (8u))
 // total number of bytes per common shift register (CSR))
-#define TLC5947_NO_OF_BYTES_PER_DAISY_CSR       (TLC5947_NO_OF_CHIPS * TLC5947_NO_OF_BYTES_PER_CSR)
+#define TLC5941Q1_NO_OF_BYTES_PER_DAISY_CSR       (TLC5941Q1_NO_OF_CHIPS * TLC5941Q1_NO_OF_BYTES_PER_CSR)
 
 // gs data register length
-#define TLC5947_GS_DATA_REGISTER_LENGTH         (TLC5947_NO_OF_CHIPS * TLC5947_NO_OF_ACTIVE_CHANNELS_PER_CHIP)
+#define TLC5941Q1_GS_DATA_REGISTER_LENGTH         (TLC5941Q1_NO_OF_CHIPS * TLC5941Q1_NO_OF_ACTIVE_CHANNELS_PER_CHIP)
+
+#define TLC5941Q1_DC_DATA_MIN_VALUE               (0x00U)
+#define TLC5941Q1_DC_DATA_MAX_VALUE               (0x3FU)
+#define TLC5941Q1_GS_DATA_MIN_VALUE               (0x000U)
+#define TLC5941Q1_GS_DATA_MAX_VALUE               (0xFFFU)
     
-#define TLC5947_GS_DATA_MIN_VALUE               (0x000U)
-#define TLC5947_GS_DATA_MAX_VALUE               (0xFFFU)
-    
-#define TLC5947_GS_DATA_INVERT(crt_value)       (TLC5947_GS_DATA_MAX_VALUE-crt_value)
+#define TLC5941Q1_GS_DATA_INVERT(crt_value)       (TLC5941Q1_GS_DATA_MAX_VALUE-crt_value)
 /* ========================================================================== */
     
 // *****************************************************************************
@@ -151,29 +155,37 @@ typedef struct _example_struct_t {
 } example_struct_t;
 
 */
+
+typedef enum {
+    MODE_GS = (0u),
+    MODE_DC = (1u)
+            
+} input_mode_t;
     
-typedef struct _tlc5947_interface_t {
+typedef struct _tlc5941q1_interface_t {
     // PORT_PIN_PAxx or PORT_PIN_PBxx, where xx is the pin number (e.g. PORT_PIN_PA04, PORT_PIN_PB15)
     PORT_PIN xlat;
     PORT_PIN blank;
+    PORT_PIN mode;
     
-    // SERCOM0_ID to SERCOM5_ID (for ATSAMC21J18A)
+    // SERCOM0 to SERCOM5 (for ATSAMC21J18A)
     sercom_instance_t sercom_instance;
 
-} tlc5947_interface_t;
+} tlc5941q1_interface_t;
 
-typedef struct _tlc5947_t {
+typedef struct _tlc5941q1_t {
     
     PORT_PIN xlat;
     PORT_PIN blank;
+    PORT_PIN mode;
     
     sercom_instance_t sercom_instance;
     bool (*SPI_WriteRead) (void*, size_t, void*, size_t);
     
-    uint8_t common_shift_register[TLC5947_NO_OF_BYTES_PER_DAISY_CSR];
-    uint8_t receive_register[TLC5947_NO_OF_BYTES_PER_DAISY_CSR];
-    
-} tlc5947_t;
+    uint8_t common_shift_register[TLC5941Q1_NO_OF_BYTES_PER_DAISY_CSR];
+    uint8_t receive_register[TLC5941Q1_NO_OF_BYTES_PER_DAISY_CSR];
+   
+} tlc5941q1_t;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -233,24 +245,24 @@ int ExampleFunction(int param1, int param2);
 
 */
 
-// init the tlc5947 data structure
-status_t TLC5947InitStruct(tlc5947_t *driver, tlc5947_interface_t *interface);
+// init the tlc5941q1 data structure
+status_t TLC5941Q1InitStruct(tlc5941q1_t *driver, tlc5941q1_interface_t *interface);
 
 // build the CSR from a value
-status_t TLC5947SetCommonShiftRegisterToValue(tlc5947_t *driver, uint16_t new_value);
+status_t TLC5941Q1SetCommonShiftRegisterToValue(tlc5941q1_t *driver, input_mode_t mode, uint16_t new_value);
 
 // build the CSR from an array of values
-status_t TLC5947UpdateCommonShiftRegister(tlc5947_t *driver, void *gs_data_register);
+status_t TLC5941Q1UpdateCommonShiftRegister(tlc5941q1_t *driver, input_mode_t mode, void *data_register);
 
-// writes the gs data into tlc5947 chip via SPI
-status_t TLC5947WriteData(tlc5947_t *driver);
+// writes the gs data into tlc5947q1 chip via SPI
+status_t TLC5941Q1WriteData(tlc5941q1_t *driver, input_mode_t mode);
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _TLC5947_H */
+#endif /* _TLC5941Q1_H */
 
 /* *****************************************************************************
  End of File

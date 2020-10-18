@@ -8,8 +8,9 @@
         <logicalFolder name="f2" displayName="custom" projectFiles="true">
           <logicalFolder name="f1" displayName="tlc59xx" projectFiles="true">
             <itemPath>../src/tlc5947.h</itemPath>
+            <itemPath>../src/tlc5941q1.h</itemPath>
+            <itemPath>../src/tlc59xx.h</itemPath>
           </logicalFolder>
-          <itemPath>../src/cocann.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="default" projectFiles="true">
           <logicalFolder name="f2" displayName="bsp" projectFiles="true">
@@ -123,8 +124,9 @@
         <logicalFolder name="f2" displayName="custom" projectFiles="true">
           <logicalFolder name="f1" displayName="tlc59xx" projectFiles="true">
             <itemPath>../src/tlc5947.c</itemPath>
+            <itemPath>../src/tlc5941q1.c</itemPath>
+            <itemPath>../src/tlc59xx.c</itemPath>
           </logicalFolder>
-          <itemPath>../src/cocann.c</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="default" projectFiles="true">
           <logicalFolder name="f3" displayName="bsp" projectFiles="true">

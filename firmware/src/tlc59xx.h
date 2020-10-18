@@ -71,15 +71,21 @@ extern "C" {
 #define EXAMPLE_CONSTANT 0
     
 */
-#define NO_OF_CHIPS             (1u)
-#define NO_OF_CHANNELS          (24u)
-#define NO_OF_ACTIVE_CHANNELS   (22u)    
-#define GS_REG_LENGTH           (NO_OF_CHIPS * NO_OF_ACTIVE_CHANNELS)
-#define CS_REG_LENGTH           (NO_OF_CHIPS * NO_OF_CHANNELS)
+#define TLC5947_NO_OF_CHIPS             (1u)
+#define TLC5947_NO_OF_CHANNELS          (24u)
+#define TLC5947_NO_OF_ACTIVE_CHANNELS   (22u)    
+    
+#define TLC5941Q1_NO_OF_CHIPS           (1u)
+#define TLC5941Q1_NO_OF_CHANNELS        (16u)
+#define TLC5941Q1_NO_OF_ACTIVE_CHANNELS (16u)    
 
-extern uint8_t dummy_gs_register_1B[];
-extern uint16_t dummy_gs_register_2B[];
-extern uint8_t dummy_cs_register[];
+extern uint8_t tlc5947_dummy_gs_register_1B[];
+extern uint16_t tlc5947_dummy_gs_register_2B[];
+
+extern uint8_t tlc5941q1_dummy_dc_register[];
+extern uint8_t tlc5941q1_dummy_gs_register_1B[];
+extern uint16_t tlc5941q1_dummy_gs_register_2B[];
+extern bool trigger;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -145,6 +151,12 @@ typedef enum {
     SERCOM5     = 5u
             
 } sercom_instance_t;
+
+typedef enum {
+    GS_SIZE_1B = (1u),
+    GS_SIZE_2B = (2u)
+            
+} gs_size_t;
 
 // *****************************************************************************
 // *****************************************************************************

@@ -27,8 +27,9 @@
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
 
-#include "cocann.h"
+#include "tlc59xx.h"
 #include "tlc5947.h"
+#include "tlc5941q1.h"
 
 
 // *****************************************************************************
@@ -37,10 +38,20 @@
 // *****************************************************************************
 // *****************************************************************************
 
-uint8_t receiver[36];
+//#define LED_BOARD_DEMO 
+#define MOTOR_BOARD_DEMO 
 
+#ifdef LED_BOARD_DEMO
+tlc5941q1_interface_t tlc5941q1_interface;
+tlc5941q1_t tlc5941q1_driver;
+#endif
+
+#ifdef MOTOR_BOARD_DEMO
 tlc5947_interface_t tlc5947_interface;
 tlc5947_t tlc5947_driver;
+#endif
+
+bool trigger = true;
 
 int main ( void )
 {
@@ -49,39 +60,42 @@ int main ( void )
     
     // start systick timer @ 1ms period
     SYSTICK_TimerStart();
+
+#ifdef LED_BOARD_DEMO
+    tlc5941q1_interface.xlat = XLAT_PIN;
+    tlc5941q1_interface.blank = BLANK_PIN;
+    tlc5941q1_interface.mode = MODE_PIN;
+    tlc5941q1_interface.sercom_instance = SERCOM5;
     
+    TLC5941Q1InitStruct(&tlc5941q1_driver, &tlc5941q1_interface);
+#endif
+    
+#ifdef MOTOR_BOARD_DEMO
     // tlc5947 driver init
     tlc5947_interface.xlat = XLAT_PIN;
     tlc5947_interface.blank = BLANK_PIN;
     tlc5947_interface.sercom_instance = SERCOM5;
-
+    
     TLC5947InitStruct(&tlc5947_driver, &tlc5947_interface);
+#endif
     
     while ( true )
     {
-        TLC5947UpdateCommonShiftRegister(&tlc5947_driver, dummy_gs_register_2B);
+
+#ifdef LED_BOARD_DEMO
+        if (trigger == true) {
+            TLC5941Q1UpdateCommonShiftRegister(&tlc5941q1_driver, MODE_GS, tlc5941q1_dummy_gs_register_2B);
+            TLC5941Q1WriteData(&tlc5941q1_driver, MODE_GS);
+            
+            trigger = false;
+        }
+#endif
+        
+#ifdef MOTOR_BOARD_DEMO
+        TLC5947UpdateCommonShiftRegister(&tlc5947_driver, tlc5947_dummy_gs_register_2B);
         TLC5947WriteData(&tlc5947_driver);
-        SYSTICK_DelayMs(1000);
-                
-        /*
-        tlc5947_driver.SPI_WriteRead(common_shift_register, 36u, receiver, 36u);
-        SYSTICK_DelayMs(1000);
-         */
-        
-        /*
-        PORT_PinToggle(tlc5947_driver.blank);
-        
-        PORT_PinWrite(tlc5947_driver.blank, TRUE);
-        PORT_PinWrite(tlc5947_driver.xlat, FALSE);
-        SYSTICK_DelayMs(10);
-        
-        PORT_PinWrite(tlc5947_driver.blank, FALSE);
-        PORT_PinWrite(tlc5947_driver.xlat, TRUE);
-        SYSTICK_DelayMs(10);
-         */
-        
-        /* Maintain state machines of all polled MPLAB Harmony modules. */
-        //SYS_Tasks ( );
+#endif
+        //SYSTICK_DelayMs(1000);
     }
 
     /* Execution should not come here during normal operation */

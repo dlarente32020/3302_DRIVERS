@@ -25,7 +25,7 @@
  */
 
 /* TODO:  Include other files here if needed. */
-#include "cocann.h"
+#include "tlc59xx.h"
 #include "tlc5947.h"
 
 /* ************************************************************************** */
@@ -225,19 +225,19 @@ status_t TLC5947InitStruct(tlc5947_t *driver, tlc5947_interface_t *interface)
   @Remarks
     Refer to the example_file.h interface header for function usage details.
  */
-status_t TLC5947SetCommonShiftRegisterToValue(tlc5947_t *driver, uint16_t value) {
+status_t TLC5947SetCommonShiftRegisterToValue(tlc5947_t *driver, uint16_t new_value) {
     uint16_t chip_id, cindex;
     uint16_t disabled_value = TLC5947_GS_DATA_MIN_VALUE;
     uint8_t disabled_channels;
     
     // make sure the inserted value is not bigger than the max value
-    if (value > TLC5947_GS_DATA_MAX_VALUE) {
-        value = TLC5947_GS_DATA_MAX_VALUE;
+    if (new_value > TLC5947_GS_DATA_MAX_VALUE) {
+        new_value = TLC5947_GS_DATA_MAX_VALUE;
     }
     
     // if inverted, update the value
     if (TLC5947_IS_GS_DATA_INVERTED) {
-        value = TLC5947_GS_DATA_INVERT(value);
+        new_value = TLC5947_GS_DATA_INVERT(new_value);
         disabled_value = TLC5947_GS_DATA_MAX_VALUE;
     }
     
@@ -249,16 +249,20 @@ status_t TLC5947SetCommonShiftRegisterToValue(tlc5947_t *driver, uint16_t value)
                 driver->common_shift_register[cindex] = disabled_value >> 4;
                 driver->common_shift_register[cindex+1] = (disabled_value >> 8) + (disabled_value << 4);
                 driver->common_shift_register[cindex+2] = disabled_value;
+                
+                disabled_channels = disabled_channels - 2;
             }
             else if (disabled_channels == 1) {
                 driver->common_shift_register[cindex] = disabled_value >> 4;
-                driver->common_shift_register[cindex+1] = (value >> 8) + (disabled_value << 4);
-                driver->common_shift_register[cindex+2] = value;
+                driver->common_shift_register[cindex+1] = (new_value >> 8) + (disabled_value << 4);
+                driver->common_shift_register[cindex+2] = new_value;
+                
+                disabled_channels = disabled_channels - 1;
             }
             else {
-                driver->common_shift_register[cindex] = value >> 4;
-                driver->common_shift_register[cindex+1] = (value >> 8) + (value << 4);
-                driver->common_shift_register[cindex+2] = value;
+                driver->common_shift_register[cindex] = new_value >> 4;
+                driver->common_shift_register[cindex+1] = (new_value >> 8) + (new_value << 4);
+                driver->common_shift_register[cindex+2] = new_value;
             }
         }
     }
@@ -358,7 +362,7 @@ status_t TLC5947WriteData(tlc5947_t *driver)
     PORT_PinSet(driver->blank);
     _nop();
 
-    driver->SPI_WriteRead(driver->common_shift_register, TLC5947_NO_OF_BYTES_PER_CSR, driver->receive_register, TLC5947_NO_OF_BYTES_PER_CSR);
+    driver->SPI_WriteRead(driver->common_shift_register, TLC5947_NO_OF_BYTES_PER_DAISY_CSR, driver->receive_register, TLC5947_NO_OF_BYTES_PER_DAISY_CSR);
     
     // XLAT -> HIGH
     PORT_PinSet(driver->xlat);

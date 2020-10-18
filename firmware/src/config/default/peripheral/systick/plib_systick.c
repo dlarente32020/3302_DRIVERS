@@ -40,6 +40,7 @@
 
 #include "device.h"
 #include "peripheral/systick/plib_systick.h"
+#include "tlc59xx.h"
 
 SYSTICK_OBJECT systick;
 
@@ -121,4 +122,6 @@ void SysTick_Handler()
 	{
 		systick.callback(systick.context);
 	}
+    
+    trigger = true;
 }
