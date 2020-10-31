@@ -11,7 +11,7 @@
     TLC5947, Texas Instruments PWM controller IC source file
 
   @Description
-    ::todo::
+    tlc5947 source file
  */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 
 /* TODO:  Include other files here if needed. */
 #include "tlc59xx.h"
-#include "tlc5947.h"
 
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -134,32 +133,38 @@ static int ExampleLocalFunction(int param1, int param2) {
 
 // *****************************************************************************
 
-/** 
-  @Function
-    int ExampleInterfaceFunctionName ( int param1, int param2 ) 
-
-  @Summary
-    Brief one-line description of the function.
-
-  @Remarks
-    Refer to the example_file.h interface header for function usage details.
-
-int ExampleInterfaceFunction(int param1, int param2) {
-    return 0;
-}
-
- */
-
 /**
-  @Function
-    int ExampleInterfaceFunctionName ( int param1, int param2 ) 
+@Function
+  status_t TLC5947InitStruct(tlc5947_t *driver, tlc5947_interface_t *interface)
 
-  @Summary
-    Brief one-line description of the function.
+@Summary
+  initialization function for the tlc5947_t data structure
 
-  @Remarks
-    Refer to the example_file.h interface header for function usage details.
- */
+@Description
+  this function is used to initialize a tlc5947_t data structure based on a tlc5947_interface_t data structure
+  <p>
+
+@Precondition
+  the tlc5947_interface_t data structure has to be initialized
+
+@Parameters
+  @param *driver - pointer to a tlc5947_t data structure
+
+  @param *interface - pointer to a tlc5947_interface_t data structure
+
+@Returns
+  <ul>
+    <li>STATUS_NOK - indicates an error occurred
+    <li>STATUS_OK - indicates an error did not occur
+  </ul>
+
+@Remarks
+  none
+
+@Example
+  @code
+  TLC5947InitStructure(&tlc5947_driver, &tlc5947_interface);
+*/
 status_t TLC5947InitStruct(tlc5947_t *driver, tlc5947_interface_t *interface)
 {
     driver->xlat = interface->xlat;
@@ -216,15 +221,37 @@ status_t TLC5947InitStruct(tlc5947_t *driver, tlc5947_interface_t *interface)
 
 
 /**
-  @Function
-    int ExampleInterfaceFunctionName ( int param1, int param2 ) 
+@Function
+  status_t TLC5947SetCommonShiftRegisterToValue(tlc5947_t *driver, uint16_t new_value)
 
-  @Summary
-    Brief one-line description of the function.
+@Summary
+  populate the CSR with a specific value
 
-  @Remarks
-    Refer to the example_file.h interface header for function usage details.
- */
+@Description
+  the CSR locations (one for each output channel) will be overwritten by the new_value
+  <p>
+
+@Precondition
+  none
+
+@Parameters
+  @param *driver - pointer to a tlc5947_t data structure
+
+  @param new_value - 16-bit value that will be written to each output channel of the CSR
+
+@Returns
+  <ul>
+    <li>STATUS_NOK - indicates an error occurred
+    <li>STATUS_OK - indicates an error did not occur
+  </ul>
+
+@Remarks
+  none
+
+@Example
+  @code
+  TLC5947SetCommonShiftRegisterToValue(&tlc5947_driver, 0x0FFF);
+*/
 status_t TLC5947SetCommonShiftRegisterToValue(tlc5947_t *driver, uint16_t new_value) {
     uint16_t chip_id, cindex;
     uint16_t disabled_value = TLC5947_GS_DATA_MIN_VALUE;
@@ -271,15 +298,37 @@ status_t TLC5947SetCommonShiftRegisterToValue(tlc5947_t *driver, uint16_t new_va
 }
 
 /**
-  @Function
-    int ExampleInterfaceFunctionName ( int param1, int param2 ) 
+@Function
+  status_t TLC5947UpdateCommonShiftRegister(tlc5947_t *driver, void *data_register)
 
-  @Summary
-    Brief one-line description of the function.
+@Summary
+  populate the CSR with the values hold by a data register (one location for each active channel)
 
-  @Remarks
-    Refer to the example_file.h interface header for function usage details.
- */
+@Description
+  the CSR locations (one for each output channel) will be overwritten by the appropriate value in the data register
+  <p>
+
+@Precondition
+  none
+
+@Parameters
+  @param *driver - pointer to a tlc5947_t data structure
+
+  @param *data_register - pointer to the data register holding the values that need to be written to the CSR
+
+@Returns
+  <ul>
+    <li>STATUS_NOK - indicates an error occurred
+    <li>STATUS_OK - indicates an error did not occur
+  </ul>
+
+@Remarks
+  none
+
+@Example
+  @code
+  TLC5941Q1UpdateCommonShiftRegister(&tlc5947_driver, &data_register);
+*/
 status_t TLC5947UpdateCommonShiftRegister(tlc5947_t *driver, void *gs_data_register) {
     uint16_t chip_id, aindex, cindex;
     uint8_t disabled_channels;
@@ -347,15 +396,35 @@ status_t TLC5947UpdateCommonShiftRegister(tlc5947_t *driver, void *gs_data_regis
 
 
 /**
-  @Function
-    int ExampleInterfaceFunctionName ( int param1, int param2 ) 
+@Function
+  status_t TLC5947WriteData(tlc5947_t *driver)
 
-  @Summary
-    Brief one-line description of the function.
+@Summary
+  sends the CSR content to the chip/s via the selected SPI module
 
-  @Remarks
-    Refer to the example_file.h interface header for function usage details.
- */
+@Description
+  the previously set up SERCOM SPI module is used to write the contents of CSR to the chip/s and at the same time to read what comes back
+  <p>
+
+@Precondition
+  none
+
+@Parameters
+  @param *driver - pointer to a tlc5947_t data structure
+
+@Returns
+  <ul>
+    <li>STATUS_NOK - indicates an error occurred
+    <li>STATUS_OK - indicates an error did not occur
+  </ul>
+
+@Remarks
+  none
+
+@Example
+  @code
+  TLC5941Q1WriteData(&tlc5947_driver);
+*/
 status_t TLC5947WriteData(tlc5947_t *driver)
 {
     // BLANK -> HIGH

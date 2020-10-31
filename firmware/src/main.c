@@ -28,30 +28,59 @@
 #include "definitions.h"                // SYS function prototypes
 
 #include "tlc59xx.h"
-#include "tlc5947.h"
-#include "tlc5941q1.h"
 
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Defines
+// *****************************************************************************
+// *****************************************************************************
+
+// uncomment the drivers that will be used in your project
+#define USE_TLC5941Q1_DRIVER
+//#define USE_TLC5947_DRIVER
+
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local Variables
+// *****************************************************************************
+// *****************************************************************************
+
+// todo: add here the local variables
+bool new_period_trigger = false;
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Main Entry Point
 // *****************************************************************************
 // *****************************************************************************
+#ifdef USE_TLC5941Q1_DRIVER
+    uint8_t dc_data_register[TLC5941Q1_NO_OF_CHIPS * TLC5941Q1_NO_OF_ACTIVE_CHANNELS_PER_CHIP] = {
+    //  ch00  ch01  ch02  ch03  ch04  ch05  ch06  ch07  ch08  ch09  ch10  ch11  ch12  ch13  ch14  ch15
+        0x3F, 0x3F, 0x3F, 0x3F, 0x3F, 0x3F, 0x3F, 0x3F, 0x3F, 0x3F, 0x3F, 0x3F, 0x3F, 0x3F, 0x3F, 0x3F,     // chip00
+    };
 
-//#define LED_BOARD_DEMO 
-#define MOTOR_BOARD_DEMO 
+    uint8_t gs_data_register[TLC5941Q1_NO_OF_CHIPS * TLC5941Q1_NO_OF_ACTIVE_CHANNELS_PER_CHIP] = {
+    //  ch00  ch01  ch02  ch03  ch04  ch05  ch06  ch07  ch08  ch09  ch10  ch11  ch12  ch13  ch14  ch15
+        0x33, 0x77, 0xBB, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x11, 0x00, 0x00, 0x00, 0x11, 0x11, 0x00, 0x00,     // chip00
+    };
 
-#ifdef LED_BOARD_DEMO
-tlc5941q1_interface_t tlc5941q1_interface;
-tlc5941q1_t tlc5941q1_driver;
+    tlc5941q1_interface_t tlc5941q1_interface;
+    tlc5941q1_t tlc5941q1_driver;
+
 #endif
 
-#ifdef MOTOR_BOARD_DEMO
-tlc5947_interface_t tlc5947_interface;
-tlc5947_t tlc5947_driver;
-#endif
+#ifdef USE_TLC5947_DRIVER
+    uint8_t gs_data_register[TLC5947_NO_OF_CHIPS * TLC5947_NO_OF_ACTIVE_CHANNELS_PER_CHIP] = {
+    //  ch00  ch01  ch02  ch03  ch04  ch05  ch06  ch07  ch08  ch09  ch10  ch11  ch12  ch13  ch14  ch15  ch16  ch17  ch18  ch19  ch20  ch21
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x33, 0x66, 0x99, 0xCC, 0xFF, 0x00, 0x00,     // chip00
+    };
 
-bool trigger = true;
+    tlc5947_interface_t tlc5947_interface;
+    tlc5947_t tlc5947_driver;
+
+#endif
 
 int main ( void )
 {
@@ -60,42 +89,40 @@ int main ( void )
     
     // start systick timer @ 1ms period
     SYSTICK_TimerStart();
-
-#ifdef LED_BOARD_DEMO
-    tlc5941q1_interface.xlat = XLAT_PIN;
+    
+#ifdef USE_TLC5941Q1_DRIVER
     tlc5941q1_interface.blank = BLANK_PIN;
+    tlc5941q1_interface.xlat = XLAT_PIN;
     tlc5941q1_interface.mode = MODE_PIN;
+    
     tlc5941q1_interface.sercom_instance = SERCOM5;
     
     TLC5941Q1InitStruct(&tlc5941q1_driver, &tlc5941q1_interface);
 #endif
     
-#ifdef MOTOR_BOARD_DEMO
-    // tlc5947 driver init
-    tlc5947_interface.xlat = XLAT_PIN;
+#ifdef USE_TLC5947_DRIVER
     tlc5947_interface.blank = BLANK_PIN;
+    tlc5947_interface.xlat = XLAT_PIN;
+    
     tlc5947_interface.sercom_instance = SERCOM5;
     
     TLC5947InitStruct(&tlc5947_driver, &tlc5947_interface);
+    
+    TLC5947UpdateCommonShiftRegister(&tlc5947_driver, gs_data_register);
+    TLC5947WriteData(&tlc5947_driver);
 #endif
     
     while ( true )
     {
+#ifdef USE_TLC5941Q1_DRIVER
+      if (new_period_trigger == true) {
+          TLC5941Q1UpdateCommonShiftRegister(&tlc5941q1_driver, MODE_GS, gs_data_register);
+          TLC5941Q1WriteData(&tlc5941q1_driver, MODE_GS);
+          
+          new_period_trigger = false;
+      }
+#endif
 
-#ifdef LED_BOARD_DEMO
-        if (trigger == true) {
-            TLC5941Q1UpdateCommonShiftRegister(&tlc5941q1_driver, MODE_GS, tlc5941q1_dummy_gs_register_2B);
-            TLC5941Q1WriteData(&tlc5941q1_driver, MODE_GS);
-            
-            trigger = false;
-        }
-#endif
-        
-#ifdef MOTOR_BOARD_DEMO
-        TLC5947UpdateCommonShiftRegister(&tlc5947_driver, tlc5947_dummy_gs_register_2B);
-        TLC5947WriteData(&tlc5947_driver);
-#endif
-        //SYSTICK_DelayMs(1000);
     }
 
     /* Execution should not come here during normal operation */

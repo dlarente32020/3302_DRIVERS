@@ -123,5 +123,5 @@ void SysTick_Handler()
 		systick.callback(systick.context);
 	}
     
-    trigger = true;
+    new_period_trigger = true;
 }

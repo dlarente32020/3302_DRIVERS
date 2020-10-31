@@ -11,7 +11,7 @@
     TLC5941-Q1, Texas Instruments PWM controller IC source file
 
   @Description
-    ::todo::
+    tlc5941q1 source file
  */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 
 /* TODO:  Include other files here if needed. */
 #include "tlc59xx.h"
-#include "tlc5941q1.h"
 
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -134,32 +133,38 @@ static int ExampleLocalFunction(int param1, int param2) {
 
 // *****************************************************************************
 
-/** 
-  @Function
-    int ExampleInterfaceFunctionName ( int param1, int param2 ) 
-
-  @Summary
-    Brief one-line description of the function.
-
-  @Remarks
-    Refer to the example_file.h interface header for function usage details.
-
-int ExampleInterfaceFunction(int param1, int param2) {
-    return 0;
-}
-
- */
-
 /**
-  @Function
-    int ExampleInterfaceFunctionName ( int param1, int param2 ) 
+@Function
+  status_t TLC5941Q1InitStruct(tlc5941q1_t *driver, tlc5941q1_interface_t *interface)
 
-  @Summary
-    Brief one-line description of the function.
+@Summary
+  initialization function for the tlc5941q1_t data structure
 
-  @Remarks
-    Refer to the example_file.h interface header for function usage details.
- */
+@Description
+  this function is used to initialize a tlc5941q1_t data structure based on a tlc5941q1_interface_t data structure
+  <p>
+
+@Precondition
+  the tlc5941q1_interface_t data structure has to be initialized
+
+@Parameters
+  @param *driver - pointer to a tlc5941q1_t data structure
+
+  @param *interface - pointer to a tlc5941q1_interface_t data structure
+
+@Returns
+  <ul>
+    <li>STATUS_NOK - indicates an error occurred
+    <li>STATUS_OK - indicates an error did not occur
+  </ul>
+
+@Remarks
+  none
+
+@Example
+  @code
+  TLC5941Q1InitStructure(&tlc5941q1_driver, &tlc5941q1_interface);
+*/
 status_t TLC5941Q1InitStruct(tlc5941q1_t *driver, tlc5941q1_interface_t *interface)
 {
     driver->xlat = interface->xlat;
@@ -207,29 +212,55 @@ status_t TLC5941Q1InitStruct(tlc5941q1_t *driver, tlc5941q1_interface_t *interfa
     }
 
     // set all channels GS to minimum (disable)
-    //TLC5941Q1SetCommonShiftRegisterToValue(driver, MODE_GS, TLC5941Q1_GS_DATA_MIN_VALUE);
+    TLC5941Q1SetCommonShiftRegisterToValue(driver, MODE_GS, TLC5941Q1_GS_DATA_MIN_VALUE);
     // write initial GS data to the chips
-    //TLC5941Q1WriteData(driver, MODE_GS);
+    TLC5941Q1WriteData(driver, MODE_GS);
     
     // set all channels DC to maximum (max. current)
-    //TLC5941Q1SetCommonShiftRegisterToValue(driver, MODE_DC, TLC5941Q1_DC_DATA_MAX_VALUE);
+    TLC5941Q1SetCommonShiftRegisterToValue(driver, MODE_DC, TLC5941Q1_DC_DATA_MAX_VALUE);
     // write initial DC data to the chips
-    //TLC5941Q1WriteData(driver, MODE_DC);
+    TLC5941Q1WriteData(driver, MODE_DC);
     
     return STATUS_OK;
 }
 
 
 /**
-  @Function
-    int ExampleInterfaceFunctionName ( int param1, int param2 ) 
+@Function
+  status_t TLC5941Q1SetCommonShiftRegisterToValue(tlc5941q1_t *driver, input_mode_t mode, uint16_t new_value)
 
-  @Summary
-    Brief one-line description of the function.
+@Summary
+  populate the CSR with a specific value
 
-  @Remarks
-    Refer to the example_file.h interface header for function usage details.
- */
+@Description
+  the CSR locations (one for each output channel) will be overwritten by the new_value
+  <p>
+
+@Precondition
+  none
+
+@Parameters
+  @param *driver - pointer to a tlc5941q1_t data structure
+
+  @param mode - specifies if the CSR is written with either DC or GS data
+
+  @param new_value - 16-bit value that will be written to each output channel of the CSR
+
+@Returns
+  <ul>
+    <li>STATUS_NOK - indicates an error occurred
+    <li>STATUS_OK - indicates an error did not occur
+  </ul>
+
+@Remarks
+  none
+
+@Example
+  @code
+  TLC5941Q1SetCommonShiftRegisterToValue(&tlc5941q1_driver, MODE_GS, 0x0FFF);
+  or
+  TLC5941Q1SetCommonShiftRegisterToValue(&tlc5941q1_driver, MODE_DC, 0x003F);
+*/
 status_t TLC5941Q1SetCommonShiftRegisterToValue(tlc5941q1_t *driver, input_mode_t mode, uint16_t new_value) {
     uint16_t chip_id, cindex, cindex_upper_limit;
     uint16_t disabled_value;
@@ -354,15 +385,41 @@ status_t TLC5941Q1SetCommonShiftRegisterToValue(tlc5941q1_t *driver, input_mode_
 }
 
 /**
-  @Function
-    int ExampleInterfaceFunctionName ( int param1, int param2 ) 
+@Function
+  status_t TLC5941Q1UpdateCommonShiftRegister(tlc5941q1_t *driver, input_mode_t mode, void *data_register)
 
-  @Summary
-    Brief one-line description of the function.
+@Summary
+  populate the CSR with the values hold by a data register (one location for each active channel)
 
-  @Remarks
-    Refer to the example_file.h interface header for function usage details.
- */
+@Description
+  the CSR locations (one for each output channel) will be overwritten by the appropriate value in the data register
+  <p>
+
+@Precondition
+  none
+
+@Parameters
+  @param *driver - pointer to a tlc5941q1_t data structure
+
+  @param mode - specifies if the CSR is written with either DC or GS data
+
+  @param *data_register - pointer to the data register holding the values that need to be written to the CSR
+
+@Returns
+  <ul>
+    <li>STATUS_NOK - indicates an error occurred
+    <li>STATUS_OK - indicates an error did not occur
+  </ul>
+
+@Remarks
+  none
+
+@Example
+  @code
+  TLC5941Q1UpdateCommonShiftRegister(&tlc5941q1_driver, MODE_GS, &gs_data_register);
+  or
+  TLC5941Q1UpdateCommonShiftRegister(&tlc5941q1_driver, MODE_DC, &dc_data_register);
+*/
 status_t TLC5941Q1UpdateCommonShiftRegister(tlc5941q1_t *driver, input_mode_t mode, void *data_register) {
     uint16_t chip_id, aindex, cindex, cindex_upper_limit;
     uint8_t disabled_channels;
@@ -370,8 +427,6 @@ status_t TLC5941Q1UpdateCommonShiftRegister(tlc5941q1_t *driver, input_mode_t mo
     
     uint8_t dvalue3, dvalue2, dvalue1, dvalue0;
     uint16_t gvalue_hi, gvalue_lo;
-    
-    // todo: bug fix: check if value greater than maximum value
     
     if (mode == MODE_DC) {
         disabled_value = TLC5941Q1_DC_DATA_MIN_VALUE;
@@ -507,15 +562,40 @@ status_t TLC5941Q1UpdateCommonShiftRegister(tlc5941q1_t *driver, input_mode_t mo
 
 
 /**
-  @Function
-    int ExampleInterfaceFunctionName ( int param1, int param2 ) 
+@Function
+  status_t TLC5941Q1WriteData(tlc5941q1_t *driver, input_mode_t mode)
 
-  @Summary
-    Brief one-line description of the function.
+@Summary
+  sends the CSR content to the chip/s via the selected SPI module
 
-  @Remarks
-    Refer to the example_file.h interface header for function usage details.
- */
+@Description
+  the previously set up SERCOM SPI module is used to write the contents of CSR to the chip/s and at the same time to read what comes back
+  depending on the mode value, appropriate control signals will be generated in order to move the input data to the corresponding registers (GS or DC)
+  <p>
+
+@Precondition
+  none
+
+@Parameters
+  @param *driver - pointer to a tlc5941q1_t data structure
+
+  @param mode - specifies if the CSR is written with either DC or GS data
+
+@Returns
+  <ul>
+    <li>STATUS_NOK - indicates an error occurred
+    <li>STATUS_OK - indicates an error did not occur
+  </ul>
+
+@Remarks
+  none
+
+@Example
+  @code
+  TLC5941Q1WriteData(&tlc5941q1_driver, MODE_GS);
+  or
+  TLC5941Q1WriteData(&tlc5941q1_driver, MODE_DC);
+*/
 status_t TLC5941Q1WriteData(tlc5941q1_t *driver, input_mode_t mode)
 {
     // BLANK -> HIGH
