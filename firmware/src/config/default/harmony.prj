@@ -112,8 +112,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/default/peripheral/sercom/spi_master/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/sercom/spi_master/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">85C2830E4AB1B2F0C40C87E2A07D4D8A</GeneratedChecksum>
-          <UserChecksum dnOrder="6">85C2830E4AB1B2F0C40C87E2A07D4D8A</UserChecksum>
+          <GeneratedChecksum dnOrder="5">928DDBE776FA1576C95D3C6C6E658E60</GeneratedChecksum>
+          <UserChecksum dnOrder="6">928DDBE776FA1576C95D3C6C6E658E60</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">SOURCE</Type>
@@ -122,7 +122,7 @@
           <LogicalPath dnOrder="3">config/default/peripheral/systick/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/systick/</PhysicalPath>
           <GeneratedChecksum dnOrder="5">3CF9733AC6B4D6DB7781E8237AD6A4E9</GeneratedChecksum>
-          <UserChecksum dnOrder="6">98A68C2F38E62DFA1CFE39C1643AE9AA</UserChecksum>
+          <UserChecksum dnOrder="6">F33A24D05131962ED086383A70BF1E36</UserChecksum>
         </File>
         <File dnOrder="13">
           <Type dnOrder="0">SOURCE</Type>
