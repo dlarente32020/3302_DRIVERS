@@ -112,8 +112,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/default/peripheral/sercom/spi_master/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/sercom/spi_master/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">928DDBE776FA1576C95D3C6C6E658E60</GeneratedChecksum>
-          <UserChecksum dnOrder="6">928DDBE776FA1576C95D3C6C6E658E60</UserChecksum>
+          <GeneratedChecksum dnOrder="5">1EEB895D2F43EC2E0D301D8C6EAE4320</GeneratedChecksum>
+          <UserChecksum dnOrder="6">1EEB895D2F43EC2E0D301D8C6EAE4320</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">SOURCE</Type>
