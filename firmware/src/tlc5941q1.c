@@ -58,6 +58,11 @@ int global_data;
 
  */
 
+static bool dummy_bit;
+
+static uint8_t spi_pins_group;
+static uint8_t spi_sclk_pin;
+static uint8_t spi_mosi_pin;
 
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -170,8 +175,11 @@ status_t TLC5941Q1InitStruct(tlc5941q1_t *driver, tlc5941q1_interface_t *interfa
     driver->xlat = interface->xlat;
     driver->blank = interface->blank;
     driver->mode = interface->mode;
-    driver->sercom_instance = interface->sercom_instance;
+    driver->spi_mosi = interface->spi_mosi;
+    driver->spi_sclk = interface->spi_sclk;
+    driver->spi_miso = interface->spi_miso;
     
+    driver->sercom_instance = interface->sercom_instance;
     switch (driver->sercom_instance)
     {
         case SERCOM0:
@@ -210,17 +218,12 @@ status_t TLC5941Q1InitStruct(tlc5941q1_t *driver, tlc5941q1_interface_t *interfa
 #endif
             break;
     }
-
-    // set all channels GS to minimum (disable)
-    TLC5941Q1SetCommonShiftRegisterToValue(driver, MODE_GS, TLC5941Q1_GS_DATA_MIN_VALUE);
-    // write initial GS data to the chips
-    TLC5941Q1WriteData(driver, MODE_GS);
     
-    // set all channels DC to maximum (max. current)
+    // fill CSR with max DC value
     TLC5941Q1SetCommonShiftRegisterToValue(driver, MODE_DC, TLC5941Q1_DC_DATA_MAX_VALUE);
-    // write initial DC data to the chips
+    // write data
     TLC5941Q1WriteData(driver, MODE_DC);
-    
+
     return STATUS_OK;
 }
 
@@ -262,7 +265,7 @@ status_t TLC5941Q1InitStruct(tlc5941q1_t *driver, tlc5941q1_interface_t *interfa
   TLC5941Q1SetCommonShiftRegisterToValue(&tlc5941q1_driver, MODE_DC, 0x003F);
 */
 status_t TLC5941Q1SetCommonShiftRegisterToValue(tlc5941q1_t *driver, input_mode_t mode, uint16_t new_value) {
-    uint16_t chip_id, cindex, cindex_upper_limit;
+    uint16_t chip_id, cindex;
     uint16_t disabled_value;
     uint8_t disabled_channels;
     
@@ -275,56 +278,47 @@ status_t TLC5941Q1SetCommonShiftRegisterToValue(tlc5941q1_t *driver, input_mode_
             
         }
         
-        for (chip_id = 0, cindex_upper_limit = TLC5941Q1_NO_OF_BYTES_PER_CSR / (2u); chip_id < TLC5941Q1_NO_OF_CHIPS; chip_id += 1, cindex_upper_limit += TLC5941Q1_NO_OF_BYTES_PER_CSR) {
+        for (chip_id = 0; chip_id < TLC5941Q1_NO_OF_CHIPS; chip_id += 1) {
             disabled_channels = TLC5941Q1_NO_OF_CHANNELS_PER_CHIP - TLC5941Q1_NO_OF_ACTIVE_CHANNELS_PER_CHIP;
 
-            for (cindex = chip_id * TLC5941Q1_NO_OF_BYTES_PER_CSR; cindex < chip_id * TLC5941Q1_NO_OF_BYTES_PER_CSR + TLC5941Q1_NO_OF_BYTES_PER_CSR; cindex += 3) {
-                if (cindex < cindex_upper_limit) {
+            for (cindex = chip_id * TLC5941Q1_NO_OF_BYTES_PER_CSR / (2u); cindex < (chip_id + 1) * (TLC5941Q1_NO_OF_BYTES_PER_CSR / (2u)); cindex += 3) {
+                if (disabled_channels >= 4) {
                     driver->common_shift_register[cindex] = disabled_value;
                     driver->common_shift_register[cindex+1] = disabled_value;
                     driver->common_shift_register[cindex+2] = disabled_value;
-                    
+
+                    disabled_channels = disabled_channels - 4;
+
+                }
+                else if (disabled_channels == 3) {
+                    driver->common_shift_register[cindex] = (disabled_value >> 4) + (new_value << 2);
+                    driver->common_shift_register[cindex+1] = (disabled_value >> 2) + (disabled_value << 4);
+                    driver->common_shift_register[cindex+2] = disabled_value + (disabled_value << 6);
+
+                    disabled_channels = disabled_channels - 3;
+
+                }
+                else if (disabled_channels == 2) {
+                    driver->common_shift_register[cindex] = (new_value >> 4) + (new_value << 2);
+                    driver->common_shift_register[cindex+1] = (disabled_value >> 2) + (new_value << 4);
+                    driver->common_shift_register[cindex+2] = disabled_value + (disabled_value << 6);
+
+                    disabled_channels = disabled_channels - 2;
+
+                }
+                else if (disabled_channels == 1) {
+                    driver->common_shift_register[cindex] = (new_value >> 4) + (new_value << 2);
+                    driver->common_shift_register[cindex+1] = (new_value >> 2) + (new_value << 4);
+                    driver->common_shift_register[cindex+2] = disabled_value + (new_value << 6);
+
+                    disabled_channels = disabled_channels - 1;
+
                 }
                 else {
-                    if (disabled_channels >= 4) {
-                        driver->common_shift_register[cindex] = disabled_value;
-                        driver->common_shift_register[cindex+1] = disabled_value;
-                        driver->common_shift_register[cindex+2] = disabled_value;
-                        
-                        disabled_channels = disabled_channels - 4;
-                        
-                    }
-                    else if (disabled_channels == 3) {
-                        driver->common_shift_register[cindex] = (disabled_value >> 4) + (new_value << 2);
-                        driver->common_shift_register[cindex+1] = (disabled_value >> 2) + (disabled_value << 4);
-                        driver->common_shift_register[cindex+2] = disabled_value + (disabled_value << 6);
+                    driver->common_shift_register[cindex] = (new_value >> 4) + (new_value << 2);
+                    driver->common_shift_register[cindex+1] = (new_value >> 2) + (new_value << 4);
+                    driver->common_shift_register[cindex+2] = new_value + (new_value << 6);
 
-                        disabled_channels = disabled_channels - 3;
-                        
-                    }
-                    else if (disabled_channels == 2) {
-                        driver->common_shift_register[cindex] = (new_value >> 4) + (new_value << 2);
-                        driver->common_shift_register[cindex+1] = (disabled_value >> 2) + (new_value << 4);
-                        driver->common_shift_register[cindex+2] = disabled_value + (disabled_value << 6);
-                        
-                        disabled_channels = disabled_channels - 2;
-                        
-                    }
-                    else if (disabled_channels == 1) {
-                        driver->common_shift_register[cindex] = (new_value >> 4) + (new_value << 2);
-                        driver->common_shift_register[cindex+1] = (new_value >> 2) + (new_value << 4);
-                        driver->common_shift_register[cindex+2] = disabled_value + (new_value << 6);
-                        
-                        disabled_channels = disabled_channels - 1;
-                        
-                    }
-                    else {
-                        driver->common_shift_register[cindex] = (new_value >> 4) + (new_value << 2);
-                        driver->common_shift_register[cindex+1] = (new_value >> 2) + (new_value << 4);
-                        driver->common_shift_register[cindex+2] = new_value + (new_value << 6);
-                        
-                    }
-                    
                 }
                 
             }
@@ -421,7 +415,7 @@ status_t TLC5941Q1SetCommonShiftRegisterToValue(tlc5941q1_t *driver, input_mode_
   TLC5941Q1UpdateCommonShiftRegister(&tlc5941q1_driver, MODE_DC, &dc_data_register);
 */
 status_t TLC5941Q1UpdateCommonShiftRegister(tlc5941q1_t *driver, input_mode_t mode, void *data_register) {
-    uint16_t chip_id, aindex, cindex, cindex_upper_limit;
+    uint16_t chip_id, aindex, cindex;
     uint8_t disabled_channels;
     uint8_t disabled_value;
     
@@ -431,64 +425,55 @@ status_t TLC5941Q1UpdateCommonShiftRegister(tlc5941q1_t *driver, input_mode_t mo
     if (mode == MODE_DC) {
         disabled_value = TLC5941Q1_DC_DATA_MIN_VALUE;
         
-        for (chip_id = 0, cindex_upper_limit = TLC5941Q1_NO_OF_BYTES_PER_CSR / (2u); chip_id < TLC5941Q1_NO_OF_CHIPS; chip_id += 1, cindex_upper_limit += TLC5941Q1_NO_OF_BYTES_PER_CSR) {
+        for (chip_id = 0; chip_id < TLC5941Q1_NO_OF_CHIPS; chip_id += 1) {
             aindex = (TLC5941Q1_NO_OF_CHIPS - chip_id) * TLC5941Q1_NO_OF_ACTIVE_CHANNELS_PER_CHIP - 1;
             disabled_channels = TLC5941Q1_NO_OF_CHANNELS_PER_CHIP - TLC5941Q1_NO_OF_ACTIVE_CHANNELS_PER_CHIP;
 
-            for (cindex = chip_id * TLC5941Q1_NO_OF_BYTES_PER_CSR; cindex < chip_id * TLC5941Q1_NO_OF_BYTES_PER_CSR + TLC5941Q1_NO_OF_BYTES_PER_CSR; cindex += 3) {
-                if (cindex < cindex_upper_limit) {
+            for (cindex = chip_id * TLC5941Q1_NO_OF_BYTES_PER_CSR / (2u); cindex < (chip_id + 1) * (TLC5941Q1_NO_OF_BYTES_PER_CSR / (2u)); cindex += 3) {
+                if (disabled_channels >= 4) {
                     dvalue3 = disabled_value;
                     dvalue2 = disabled_value;
                     dvalue1 = disabled_value;
                     dvalue0 = disabled_value;
-                    
+
+                    disabled_channels = disabled_channels - 4;
+
+                }
+                else if (disabled_channels == 3) {
+                    dvalue3 = disabled_value;
+                    dvalue2 = disabled_value;
+                    dvalue1 = disabled_value;
+                    dvalue0 = ((uint8_t *)data_register)[aindex--];
+
+                    disabled_channels = disabled_channels - 3;
+
+                }
+                else if (disabled_channels == 2) {
+                    dvalue3 = disabled_value;
+                    dvalue2 = disabled_value;
+                    dvalue1 = ((uint8_t *)data_register)[aindex--];
+                    dvalue0 = ((uint8_t *)data_register)[aindex--];
+
+                    disabled_channels = disabled_channels - 2;
+
+                }
+                else if (disabled_channels == 1) {
+                    dvalue3 = disabled_value;
+                    dvalue2 = ((uint8_t *)data_register)[aindex--];
+                    dvalue1 = ((uint8_t *)data_register)[aindex--];
+                    dvalue0 = ((uint8_t *)data_register)[aindex--];
+
+                    disabled_channels = disabled_channels - 1;
+
                 }
                 else {
-                    if (disabled_channels >= 4) {
-                        dvalue3 = disabled_value;
-                        dvalue2 = disabled_value;
-                        dvalue1 = disabled_value;
-                        dvalue0 = disabled_value;
+                    dvalue3 = ((uint8_t *)data_register)[aindex--];
+                    dvalue2 = ((uint8_t *)data_register)[aindex--];
+                    dvalue1 = ((uint8_t *)data_register)[aindex--];
+                    dvalue0 = ((uint8_t *)data_register)[aindex--];
 
-                        disabled_channels = disabled_channels - 4;
-
-                    }
-                    else if (disabled_channels == 3) {
-                        dvalue3 = disabled_value;
-                        dvalue2 = disabled_value;
-                        dvalue1 = disabled_value;
-                        dvalue0 = ((uint8_t *)data_register)[aindex--];
-
-                        disabled_channels = disabled_channels - 3;
-
-                    }
-                    else if (disabled_channels == 2) {
-                        dvalue3 = disabled_value;
-                        dvalue2 = disabled_value;
-                        dvalue1 = ((uint8_t *)data_register)[aindex--];
-                        dvalue0 = ((uint8_t *)data_register)[aindex--];
-
-                        disabled_channels = disabled_channels - 2;
-
-                    }
-                    else if (disabled_channels == 1) {
-                        dvalue3 = disabled_value;
-                        dvalue2 = ((uint8_t *)data_register)[aindex--];
-                        dvalue1 = ((uint8_t *)data_register)[aindex--];
-                        dvalue0 = ((uint8_t *)data_register)[aindex--];
-
-                        disabled_channels = disabled_channels - 1;
-
-                    }
-                    else {
-                        dvalue3 = ((uint8_t *)data_register)[aindex--];
-                        dvalue2 = ((uint8_t *)data_register)[aindex--];
-                        dvalue1 = ((uint8_t *)data_register)[aindex--];
-                        dvalue0 = ((uint8_t *)data_register)[aindex--];
-
-                    }
-                    
                 }
+                
                 driver->common_shift_register[cindex] = (dvalue2 >> 4) + (dvalue3 << 2);
                 driver->common_shift_register[cindex+1] = (dvalue1 >> 2) + (dvalue2 << 4);
                 driver->common_shift_register[cindex+2] = dvalue0 + (dvalue1 << 6);
@@ -597,32 +582,116 @@ status_t TLC5941Q1UpdateCommonShiftRegister(tlc5941q1_t *driver, input_mode_t mo
   TLC5941Q1WriteData(&tlc5941q1_driver, MODE_DC);
 */
 status_t TLC5941Q1WriteData(tlc5941q1_t *driver, input_mode_t mode)
-{
-    // BLANK -> HIGH
-    PORT_PinSet(driver->blank);
-    _nop();
-    
+{   
     if (mode == MODE_DC) {
+        // BLANK -> HIGH
+        PORT_PinSet(driver->blank);
+        _nop();
+        
+        // MODE -> HIGH
         PORT_PinSet(driver->mode);
-    }
+        _nop();
 
-    driver->SPI_WriteRead(driver->common_shift_register, TLC5941Q1_NO_OF_BYTES_PER_DAISY_CSR, driver->receive_register, TLC5941Q1_NO_OF_BYTES_PER_DAISY_CSR);
-    
-    // XLAT -> HIGH
-    PORT_PinSet(driver->xlat);
-    _nop();
-    
-    // BLANK -> LOW
-    PORT_PinClear(driver->blank);
-    _nop();
-    
-    // XLAT -> LOW
-    PORT_PinClear(driver->xlat);
-    _nop();
-    
-    if (mode == MODE_DC) {
+        // write data
+        driver->SPI_WriteRead(driver->common_shift_register, TLC5941Q1_NO_OF_BYTES_PER_DAISY_CSR / (2u), driver->receive_register, TLC5941Q1_NO_OF_BYTES_PER_DAISY_CSR / (2u));
+
+        // XLAT -> HIGH
+        PORT_PinSet(driver->xlat);
+        _nop();
+
+        // XLAT -> LOW
+        PORT_PinClear(driver->xlat);
+        _nop();
+
+        // MODE -> LOW
         PORT_PinClear(driver->mode);
+        _nop();
+
+        // fill CSR with min GS value
+        TLC5941Q1SetCommonShiftRegisterToValue(driver, MODE_GS, TLC5941Q1_GS_DATA_MIN_VALUE);
+
+        // write data
+        driver->SPI_WriteRead(driver->common_shift_register, TLC5941Q1_NO_OF_BYTES_PER_DAISY_CSR, driver->receive_register, TLC5941Q1_NO_OF_BYTES_PER_DAISY_CSR);
+
+        // XLAT -> HIGH
+        PORT_PinSet(driver->xlat);
+        _nop();
+
+        // XLAT -> LOW
+        PORT_PinClear(driver->xlat);
+        _nop();
+
+        // update dummy bit
+        dummy_bit = (driver->common_shift_register[TLC5941Q1_NO_OF_BYTES_PER_DAISY_CSR - 1] & 0xFE) ? true : false;
+        
+        // BLANK -> LOW
+        PORT_PinClear(driver->blank);
+        _nop();
+        
     }
+    else { // MODE_GS
+        spi_pins_group = (driver->spi_sclk < 32) ? (0u) : (1u);
+        spi_sclk_pin = driver->spi_sclk % 32;
+        spi_mosi_pin = driver->spi_mosi % 32;
+    
+        // generate extra SCLK pulse after the XLAT of first GS write following the DC write
+        {
+            // disable peripheral control for spi_sclk_pin and spi_mosi_pin
+            PORT_REGS->GROUP[spi_pins_group].PORT_PINCFG[spi_sclk_pin] = 0x0;
+            PORT_REGS->GROUP[spi_pins_group].PORT_PINCFG[spi_mosi_pin] = 0x0;
+
+            // spi_sclk_pin and spi_mosi_pin direction = output
+            PORT_REGS->GROUP[spi_pins_group].PORT_DIRSET = (1u) << spi_sclk_pin;
+            PORT_REGS->GROUP[spi_pins_group].PORT_DIRSET = (1u) << spi_mosi_pin;
+
+            // set mosi value as last spi transmited bit
+            PORT_PinWrite(driver->spi_mosi, dummy_bit);
+            _nop();
+
+            // spi sclk high
+            PORT_PinSet(driver->spi_sclk);
+            _nop();
+
+            // spi sclk low
+            PORT_PinClear(driver->spi_sclk);
+            _nop();
+
+            // spi mosi high
+            PORT_PinSet(driver->spi_mosi);
+            _nop();
+
+            // spi_sclk_pin and spi_mosi_pin direction = input
+            PORT_REGS->GROUP[spi_pins_group].PORT_DIRCLR = (1u) << spi_sclk_pin;
+            PORT_REGS->GROUP[spi_pins_group].PORT_DIRCLR = (1u) << spi_mosi_pin;
+
+            // enable peripheral control for spi_sclk_pin and spi_mosi_pin
+            PORT_REGS->GROUP[spi_pins_group].PORT_PINCFG[spi_sclk_pin] = 0x1;
+            PORT_REGS->GROUP[spi_pins_group].PORT_PINCFG[spi_mosi_pin] = 0x1;
+        }
+        
+        // write data
+        driver->SPI_WriteRead(driver->common_shift_register, TLC5941Q1_NO_OF_BYTES_PER_DAISY_CSR, driver->receive_register, TLC5941Q1_NO_OF_BYTES_PER_DAISY_CSR);
+
+        // update dummy bit
+        dummy_bit = (driver->common_shift_register[TLC5941Q1_NO_OF_BYTES_PER_DAISY_CSR - 1] & 0xFE) ? true : false;
+        
+        // BLANK -> HIGH
+        PORT_PinSet(driver->blank);
+        _nop();
+
+        // XLAT -> HIGH
+        PORT_PinSet(driver->xlat);
+        _nop();
+
+        // XLAT -> LOW
+        PORT_PinClear(driver->xlat);
+        _nop();
+
+        // BLANK -> LOW
+        PORT_PinClear(driver->blank);
+        _nop();
+        
+    }    
     
     return STATUS_OK;
 }

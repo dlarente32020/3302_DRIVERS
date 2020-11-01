@@ -74,7 +74,7 @@ extern "C" {
 /* ===== USER DATA - MODIFY ACCORDING TO YOUR NEEDS ========================= */
 // TLC5941-Q1 driver
 // no of daisy-chained chips
-#define TLC5941Q1_NO_OF_CHIPS                     (1u)
+#define TLC5941Q1_NO_OF_CHIPS                     (4u)
 // no of active channels per chip (max. 16)
 #define TLC5941Q1_NO_OF_ACTIVE_CHANNELS_PER_CHIP  (16u)
 
@@ -299,6 +299,9 @@ typedef struct _tlc5941q1_interface_t {
     PORT_PIN xlat;
     PORT_PIN blank;
     PORT_PIN mode;
+    PORT_PIN spi_mosi;
+    PORT_PIN spi_sclk;
+    PORT_PIN spi_miso;
 
     // SERCOM0 to SERCOM5 (for ATSAMC21J18A)
     sercom_instance_t sercom_instance;
@@ -335,6 +338,9 @@ typedef struct _tlc5941q1_t {
     PORT_PIN xlat;
     PORT_PIN blank;
     PORT_PIN mode;
+    PORT_PIN spi_mosi;
+    PORT_PIN spi_sclk;
+    PORT_PIN spi_miso;
 
     sercom_instance_t sercom_instance;
     bool (*SPI_WriteRead) (void*, size_t, void*, size_t);

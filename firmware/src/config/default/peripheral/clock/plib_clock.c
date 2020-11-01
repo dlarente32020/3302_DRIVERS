@@ -84,13 +84,13 @@ static void GCLK0_Initialize(void)
 }
 
 
-static void GCLK5_Initialize(void)
+static void GCLK2_Initialize(void)
 {
-    GCLK_REGS->GCLK_GENCTRL[5] = GCLK_GENCTRL_DIV(4) | GCLK_GENCTRL_SRC(6) | GCLK_GENCTRL_OE_Msk | GCLK_GENCTRL_GENEN_Msk;
+    GCLK_REGS->GCLK_GENCTRL[2] = GCLK_GENCTRL_DIV(12) | GCLK_GENCTRL_SRC(6) | GCLK_GENCTRL_IDC_Msk | GCLK_GENCTRL_RUNSTDBY_Msk | GCLK_GENCTRL_OE_Msk | GCLK_GENCTRL_GENEN_Msk;
 
-    while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL5_Msk) == GCLK_SYNCBUSY_GENCTRL5_Msk)
+    while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL2_Msk) == GCLK_SYNCBUSY_GENCTRL2_Msk)
     {
-        /* wait for the Generator 5 synchronization */
+        /* wait for the Generator 2 synchronization */
     }
 }
 
@@ -102,8 +102,8 @@ void CLOCK_Initialize (void)
     /* Function to Initialize the 32KHz Oscillators */
     OSC32KCTRL_Initialize();
 
-    GCLK5_Initialize();
     GCLK0_Initialize();
+    GCLK2_Initialize();
 
 
     /* Selection of the Generator and write Lock for SERCOM5_CORE */
