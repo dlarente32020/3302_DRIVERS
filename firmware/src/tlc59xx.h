@@ -74,7 +74,7 @@ extern "C" {
 /* ===== USER DATA - MODIFY ACCORDING TO YOUR NEEDS ========================= */
 // TLC5941-Q1 driver
 // no of daisy-chained chips
-#define TLC5941Q1_NO_OF_CHIPS                     (68u)
+#define TLC5941Q1_NO_OF_CHIPS                     (8u)
 // no of active channels per chip (max. 16)
 #define TLC5941Q1_NO_OF_ACTIVE_CHANNELS_PER_CHIP  (16u)
 
