@@ -39,7 +39,7 @@
 // uncomment the drivers that will be used in your project
 #define USE_TLC5941Q1_DRIVER
 //#define USE_TLC5947_DRIVER
-//#define ENABLE_ANIMATION
+#define ENABLE_ANIMATION
 
 
 // *****************************************************************************
