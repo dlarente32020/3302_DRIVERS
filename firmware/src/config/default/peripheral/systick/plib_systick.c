@@ -43,6 +43,7 @@
 #include "tlc59xx.h"
 
 SYSTICK_OBJECT systick;
+static uint8_t period = 16u;
 
 void SYSTICK_TimerInitialize ( void )
 {
@@ -123,5 +124,9 @@ void SysTick_Handler()
 		systick.callback(systick.context);
 	}
     
-    new_period_trigger = true;
+    if (0 == period--)
+    {
+        new_period_trigger = true;
+        period = 16u;
+    }
 }

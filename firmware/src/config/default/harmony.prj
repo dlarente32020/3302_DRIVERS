@@ -67,8 +67,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/default/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">253E17F881715F28293D9E0339DDBCB6</GeneratedChecksum>
-          <UserChecksum dnOrder="6">253E17F881715F28293D9E0339DDBCB6</UserChecksum>
+          <GeneratedChecksum dnOrder="5">6608E18980400C08E6AA69BF78714989</GeneratedChecksum>
+          <UserChecksum dnOrder="6">6608E18980400C08E6AA69BF78714989</UserChecksum>
         </File>
         <File dnOrder="7">
           <Type dnOrder="0">SOURCE</Type>
@@ -112,8 +112,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/default/peripheral/sercom/spi_master/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/sercom/spi_master/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">928DDBE776FA1576C95D3C6C6E658E60</GeneratedChecksum>
-          <UserChecksum dnOrder="6">928DDBE776FA1576C95D3C6C6E658E60</UserChecksum>
+          <GeneratedChecksum dnOrder="5">E0EA34CCA35D0594A120FBF8AA7565D4</GeneratedChecksum>
+          <UserChecksum dnOrder="6">E0EA34CCA35D0594A120FBF8AA7565D4</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">SOURCE</Type>
@@ -122,7 +122,7 @@
           <LogicalPath dnOrder="3">config/default/peripheral/systick/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/systick/</PhysicalPath>
           <GeneratedChecksum dnOrder="5">3CF9733AC6B4D6DB7781E8237AD6A4E9</GeneratedChecksum>
-          <UserChecksum dnOrder="6">F8D0B776B7152E3E1CC7F4EB5540E1A1</UserChecksum>
+          <UserChecksum dnOrder="6">9FE13F479B6EAFF04DA480F8262E2D92</UserChecksum>
         </File>
         <File dnOrder="13">
           <Type dnOrder="0">SOURCE</Type>

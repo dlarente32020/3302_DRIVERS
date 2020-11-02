@@ -84,9 +84,20 @@ static void GCLK0_Initialize(void)
 }
 
 
+static void GCLK1_Initialize(void)
+{
+    GCLK_REGS->GCLK_GENCTRL[1] = GCLK_GENCTRL_DIV(1) | GCLK_GENCTRL_SRC(6) | GCLK_GENCTRL_GENEN_Msk;
+
+    while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL1_Msk) == GCLK_SYNCBUSY_GENCTRL1_Msk)
+    {
+        /* wait for the Generator 1 synchronization */
+    }
+}
+
+
 static void GCLK2_Initialize(void)
 {
-    GCLK_REGS->GCLK_GENCTRL[2] = GCLK_GENCTRL_DIV(12) | GCLK_GENCTRL_SRC(6) | GCLK_GENCTRL_IDC_Msk | GCLK_GENCTRL_OE_Msk | GCLK_GENCTRL_GENEN_Msk;
+    GCLK_REGS->GCLK_GENCTRL[2] = GCLK_GENCTRL_DIV(192) | GCLK_GENCTRL_SRC(2) | GCLK_GENCTRL_IDC_Msk | GCLK_GENCTRL_OE_Msk | GCLK_GENCTRL_GENEN_Msk;
 
     while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL2_Msk) == GCLK_SYNCBUSY_GENCTRL2_Msk)
     {
@@ -103,6 +114,7 @@ void CLOCK_Initialize (void)
     OSC32KCTRL_Initialize();
 
     GCLK0_Initialize();
+    GCLK1_Initialize();
     GCLK2_Initialize();
 
 
