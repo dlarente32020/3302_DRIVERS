@@ -67,8 +67,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/default/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">C92F1A0DF8225D3F21D16569E6AB11AE</GeneratedChecksum>
-          <UserChecksum dnOrder="6">C92F1A0DF8225D3F21D16569E6AB11AE</UserChecksum>
+          <GeneratedChecksum dnOrder="5">253E17F881715F28293D9E0339DDBCB6</GeneratedChecksum>
+          <UserChecksum dnOrder="6">253E17F881715F28293D9E0339DDBCB6</UserChecksum>
         </File>
         <File dnOrder="7">
           <Type dnOrder="0">SOURCE</Type>
@@ -103,8 +103,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/default/peripheral/port/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/port/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">3D4520E8A7D46BED55516DBF06B2BB34</GeneratedChecksum>
-          <UserChecksum dnOrder="6">3D4520E8A7D46BED55516DBF06B2BB34</UserChecksum>
+          <GeneratedChecksum dnOrder="5">B9BB677446DCA4A9304ABFEAC3578D60</GeneratedChecksum>
+          <UserChecksum dnOrder="6">B9BB677446DCA4A9304ABFEAC3578D60</UserChecksum>
         </File>
         <File dnOrder="11">
           <Type dnOrder="0">SOURCE</Type>
