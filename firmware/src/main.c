@@ -251,7 +251,7 @@ int main ( void )
 
 #ifdef ENABLE_ANIMATION
     uint8_t active = 0;
-    uint8_t cnt = 30;
+    uint8_t cnt = 25;
 #endif
 
     while ( true )
@@ -282,7 +282,7 @@ int main ( void )
                   active++;
               }
               
-              cnt = 30;
+              cnt = 25;
           }
 #endif
           

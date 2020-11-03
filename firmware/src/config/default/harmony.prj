@@ -67,8 +67,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/default/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">6608E18980400C08E6AA69BF78714989</GeneratedChecksum>
-          <UserChecksum dnOrder="6">6608E18980400C08E6AA69BF78714989</UserChecksum>
+          <GeneratedChecksum dnOrder="5">03B692F12553157E8151F9488C11EF1E</GeneratedChecksum>
+          <UserChecksum dnOrder="6">03B692F12553157E8151F9488C11EF1E</UserChecksum>
         </File>
         <File dnOrder="7">
           <Type dnOrder="0">SOURCE</Type>

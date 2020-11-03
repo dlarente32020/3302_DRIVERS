@@ -94,17 +94,17 @@
         </Integer>
         <Integer dnOrder="13" id="GCLK_2_DIV">
           <Values dnOrder="0">
-            <User dnOrder="0" value="192"/>
+            <User dnOrder="0" value="234"/>
           </Values>
         </Integer>
         <Integer dnOrder="14" id="GCLK_2_DIVIDER_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="192"/>
+            <Dynamic dnOrder="0" id="core" value="234"/>
           </Values>
         </Integer>
         <Integer dnOrder="15" id="GCLK_2_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="250000"/>
+            <Dynamic dnOrder="0" id="core" value="205128"/>
           </Values>
         </Integer>
         <Boolean dnOrder="16" id="GCLK_2_IMPROVE_DUTYCYCLE">
@@ -267,7 +267,7 @@
         </Integer>
         <Integer dnOrder="46" id="GCLK_IO_2_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="250000"/>
+            <Dynamic dnOrder="0" id="core" value="205128"/>
           </Values>
         </Integer>
         <Integer dnOrder="47" id="GCLK_IO_3_FREQ">
@@ -1459,8 +1459,7 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
-    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
+    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="BSP_SAM_C21_Xplained_Pro" x="520" y="20"/>
         <ElementPosition dnOrder="1" id="cmsis" x="410" y="60"/>
@@ -1471,5 +1470,6 @@
         <ElementPosition dnOrder="6" id="sercom5" x="876" y="25"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>
