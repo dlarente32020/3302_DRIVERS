@@ -41,13 +41,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: null
-- generatedChecksum: 84FDFD870BE0383AEE2E71268B62F898
+- generatedChecksum: 5F7223807EE8CB9CEB6AA1C98E723CE3
   logicalPath: config/default/peripheral/clock
   name: plib_clock.c
   physicalPath: peripheral/clock
   security: NON_SECURE
   type: SOURCE
-  userChecksum: 84FDFD870BE0383AEE2E71268B62F898
+  userChecksum: 5F7223807EE8CB9CEB6AA1C98E723CE3
 - generatedChecksum: C99E6D9B9BA371EA749B7DC16BC2C209
   logicalPath: config/default/peripheral/evsys
   name: plib_evsys.c
@@ -69,13 +69,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: D005B7382C356EE67399EB3FC381125F
-- generatedChecksum: A5719D45D56A6D8581676A2DDD31ED87
+- generatedChecksum: 6B73B0C70048EB1DBB2B6250939EB4BF
   logicalPath: config/default/peripheral/port
   name: plib_port.c
   physicalPath: peripheral/port
   security: NON_SECURE
   type: SOURCE
-  userChecksum: A5719D45D56A6D8581676A2DDD31ED87
+  userChecksum: 6B73B0C70048EB1DBB2B6250939EB4BF
 - generatedChecksum: 51F8BFE214FE5E3217CA9A82409521B2
   logicalPath: config/default/peripheral/sercom/spi_master
   name: plib_sercom5_spi_master.c
@@ -89,7 +89,7 @@ files:
   physicalPath: peripheral/systick
   security: NON_SECURE
   type: SOURCE
-  userChecksum: 4421C0CB44AB5ECAA95126B202A52EE6
+  userChecksum: 9FE13F479B6EAFF04DA480F8262E2D92
 - generatedChecksum: 949BBD944EC8B81E639121B72E7C7510
   logicalPath: config/default
   name: startup_xc32.c
@@ -370,13 +370,13 @@ files:
   security: NON_SECURE
   type: HEADER
   userChecksum: E94C2F2827F3CB08C565ADF200C747B6
-- generatedChecksum: A4F18E3B3F3151F499BB32CDA7082EF9
+- generatedChecksum: B9BCDD6F0AA37F87F2D55B85D5626160
   logicalPath: config/default/peripheral/port
   name: plib_port.h
   physicalPath: peripheral/port
   security: NON_SECURE
   type: HEADER
-  userChecksum: A4F18E3B3F3151F499BB32CDA7082EF9
+  userChecksum: B9BCDD6F0AA37F87F2D55B85D5626160
 - generatedChecksum: 9DB3AB8FEBF5724E203E14640E1F44F2
   logicalPath: config/default/peripheral/sercom/spi_master
   name: plib_sercom5_spi_master.h
