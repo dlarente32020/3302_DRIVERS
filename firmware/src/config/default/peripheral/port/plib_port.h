@@ -66,17 +66,26 @@
 // *****************************************************************************
 
 /*** Macros for MODE pin ***/
-#define MODE_Set()               (PORT_REGS->GROUP[0].PORT_OUTSET = 1 << 10)
-#define MODE_Clear()             (PORT_REGS->GROUP[0].PORT_OUTCLR = 1 << 10)
-#define MODE_Toggle()            (PORT_REGS->GROUP[0].PORT_OUTTGL = 1 << 10)
-#define MODE_OutputEnable()      (PORT_REGS->GROUP[0].PORT_DIRSET = 1 << 10)
-#define MODE_InputEnable()       (PORT_REGS->GROUP[0].PORT_DIRCLR = 1 << 10)
-#define MODE_Get()               (((PORT_REGS->GROUP[0].PORT_IN >> 10)) & 0x01)
-#define MODE_PIN                  PORT_PIN_PA10
+#define MODE_Set()               (PORT_REGS->GROUP[1].PORT_OUTSET = 1 << 5)
+#define MODE_Clear()             (PORT_REGS->GROUP[1].PORT_OUTCLR = 1 << 5)
+#define MODE_Toggle()            (PORT_REGS->GROUP[1].PORT_OUTTGL = 1 << 5)
+#define MODE_OutputEnable()      (PORT_REGS->GROUP[1].PORT_DIRSET = 1 << 5)
+#define MODE_InputEnable()       (PORT_REGS->GROUP[1].PORT_DIRCLR = 1 << 5)
+#define MODE_Get()               (((PORT_REGS->GROUP[1].PORT_IN >> 5)) & 0x01)
+#define MODE_PIN                  PORT_PIN_PB05
 
 /*** Macros for GCLK pin ***/
-#define GCLK_Get()               (((PORT_REGS->GROUP[1].PORT_IN >> 16)) & 0x01)
-#define GCLK_PIN                  PORT_PIN_PB16
+#define GCLK_Get()               (((PORT_REGS->GROUP[0].PORT_IN >> 21)) & 0x01)
+#define GCLK_PIN                  PORT_PIN_PA21
+
+/*** Macros for XLAT pin ***/
+#define XLAT_Set()               (PORT_REGS->GROUP[0].PORT_OUTSET = 1 << 27)
+#define XLAT_Clear()             (PORT_REGS->GROUP[0].PORT_OUTCLR = 1 << 27)
+#define XLAT_Toggle()            (PORT_REGS->GROUP[0].PORT_OUTTGL = 1 << 27)
+#define XLAT_OutputEnable()      (PORT_REGS->GROUP[0].PORT_DIRSET = 1 << 27)
+#define XLAT_InputEnable()       (PORT_REGS->GROUP[0].PORT_DIRCLR = 1 << 27)
+#define XLAT_Get()               (((PORT_REGS->GROUP[0].PORT_IN >> 27)) & 0x01)
+#define XLAT_PIN                  PORT_PIN_PA27
 
 /*** Macros for BLANK pin ***/
 #define BLANK_Set()               (PORT_REGS->GROUP[1].PORT_OUTSET = 1 << 31)
@@ -98,15 +107,6 @@
 /*** Macros for SPI5_MISO pin ***/
 #define SPI5_MISO_Get()               (((PORT_REGS->GROUP[1].PORT_IN >> 2)) & 0x01)
 #define SPI5_MISO_PIN                  PORT_PIN_PB02
-
-/*** Macros for XLAT pin ***/
-#define XLAT_Set()               (PORT_REGS->GROUP[1].PORT_OUTSET = 1 << 3)
-#define XLAT_Clear()             (PORT_REGS->GROUP[1].PORT_OUTCLR = 1 << 3)
-#define XLAT_Toggle()            (PORT_REGS->GROUP[1].PORT_OUTTGL = 1 << 3)
-#define XLAT_OutputEnable()      (PORT_REGS->GROUP[1].PORT_DIRSET = 1 << 3)
-#define XLAT_InputEnable()       (PORT_REGS->GROUP[1].PORT_DIRCLR = 1 << 3)
-#define XLAT_Get()               (((PORT_REGS->GROUP[1].PORT_IN >> 3)) & 0x01)
-#define XLAT_PIN                  PORT_PIN_PB03
 // *****************************************************************************
 /* PORT Group
 

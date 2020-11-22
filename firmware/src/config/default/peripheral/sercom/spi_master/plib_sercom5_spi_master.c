@@ -57,8 +57,8 @@
 /* SERCOM5 clk freq value for the baud calculation */
 #define SERCOM5_Frequency      (uint32_t) (48000000UL)
 
-/* SERCOM5 SPI baud value for 1600000 Hz baud rate */
-#define SERCOM5_SPIM_BAUD_VALUE         (14U)
+/* SERCOM5 SPI baud value for 1500000 Hz baud rate */
+#define SERCOM5_SPIM_BAUD_VALUE         (15U)
 
 
 // *****************************************************************************

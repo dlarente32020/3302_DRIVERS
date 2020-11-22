@@ -67,8 +67,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/default/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">03B692F12553157E8151F9488C11EF1E</GeneratedChecksum>
-          <UserChecksum dnOrder="6">03B692F12553157E8151F9488C11EF1E</UserChecksum>
+          <GeneratedChecksum dnOrder="5">9B6C12FF3D01227BBE8BDBC9DE95496C</GeneratedChecksum>
+          <UserChecksum dnOrder="6">9B6C12FF3D01227BBE8BDBC9DE95496C</UserChecksum>
         </File>
         <File dnOrder="7">
           <Type dnOrder="0">SOURCE</Type>
@@ -103,8 +103,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/default/peripheral/port/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/port/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">B9BB677446DCA4A9304ABFEAC3578D60</GeneratedChecksum>
-          <UserChecksum dnOrder="6">B9BB677446DCA4A9304ABFEAC3578D60</UserChecksum>
+          <GeneratedChecksum dnOrder="5">A5719D45D56A6D8581676A2DDD31ED87</GeneratedChecksum>
+          <UserChecksum dnOrder="6">A5719D45D56A6D8581676A2DDD31ED87</UserChecksum>
         </File>
         <File dnOrder="11">
           <Type dnOrder="0">SOURCE</Type>
@@ -112,8 +112,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/default/peripheral/sercom/spi_master/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/sercom/spi_master/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">E0EA34CCA35D0594A120FBF8AA7565D4</GeneratedChecksum>
-          <UserChecksum dnOrder="6">E0EA34CCA35D0594A120FBF8AA7565D4</UserChecksum>
+          <GeneratedChecksum dnOrder="5">5557367BE9A15A9C08610826CE4E26EB</GeneratedChecksum>
+          <UserChecksum dnOrder="6">5557367BE9A15A9C08610826CE4E26EB</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">SOURCE</Type>
@@ -122,7 +122,7 @@
           <LogicalPath dnOrder="3">config/default/peripheral/systick/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/systick/</PhysicalPath>
           <GeneratedChecksum dnOrder="5">3CF9733AC6B4D6DB7781E8237AD6A4E9</GeneratedChecksum>
-          <UserChecksum dnOrder="6">9FE13F479B6EAFF04DA480F8262E2D92</UserChecksum>
+          <UserChecksum dnOrder="6">4421C0CB44AB5ECAA95126B202A52EE6</UserChecksum>
         </File>
         <File dnOrder="13">
           <Type dnOrder="0">SOURCE</Type>
@@ -490,8 +490,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/default/peripheral/port/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/port/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">B9BCDD6F0AA37F87F2D55B85D5626160</GeneratedChecksum>
-          <UserChecksum dnOrder="6">B9BCDD6F0AA37F87F2D55B85D5626160</UserChecksum>
+          <GeneratedChecksum dnOrder="5">A4F18E3B3F3151F499BB32CDA7082EF9</GeneratedChecksum>
+          <UserChecksum dnOrder="6">A4F18E3B3F3151F499BB32CDA7082EF9</UserChecksum>
         </File>
         <File dnOrder="54">
           <Type dnOrder="0">HEADER</Type>

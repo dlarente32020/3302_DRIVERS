@@ -262,6 +262,11 @@ status_t TLC5947SetCommonShiftRegisterToValue(tlc5947_t *driver, uint16_t new_va
         new_value = TLC5947_GS_DATA_MAX_VALUE;
     }
     
+    // apply user limit on GS
+    if (new_value > TLC5947_MAX_GS_VALUE) {
+        new_value = TLC5947_MAX_GS_VALUE;
+    }
+    
     // if inverted, update the value
     if (TLC5947_IS_GS_DATA_INVERTED) {
         new_value = TLC5947_GS_DATA_INVERT(new_value);
@@ -356,7 +361,19 @@ status_t TLC5947UpdateCommonShiftRegister(tlc5947_t *driver, void *gs_data_regis
             }
             else if (disabled_channels == 1) {
                 gvalue_hi = TLC5947_GS_DATA_MIN_VALUE;
-                gvalue_lo = (TLC5947_GS_DATA_SIZE == GS_SIZE_1B) ? (((uint8_t *)gs_data_register)[aindex--]) : (((uint16_t *)gs_data_register)[aindex--]);
+                
+                if (TLC5947_GS_DATA_SIZE == GS_SIZE_1B) {
+                    gvalue_lo = ((uint8_t *)gs_data_register)[aindex--];
+                    
+                }
+                else { // GS_SIZE_2B
+                    gvalue_lo = ((uint16_t *)gs_data_register)[aindex--];
+                }
+                
+                // impose user upper limit
+                if (gvalue_lo > TLC5947_MAX_GS_VALUE) {
+                    gvalue_lo = TLC5947_MAX_GS_VALUE;   
+                }
                 
                 if (TLC5947_IS_GS_DATA_INVERTED) {
                     gvalue_hi = TLC5947_GS_DATA_MAX_VALUE;
@@ -367,8 +384,24 @@ status_t TLC5947UpdateCommonShiftRegister(tlc5947_t *driver, void *gs_data_regis
                 
             }
             else {
-                gvalue_hi = (TLC5947_GS_DATA_SIZE == GS_SIZE_1B) ? (((uint8_t *)gs_data_register)[aindex--]) : (((uint16_t *)gs_data_register)[aindex--]);
-                gvalue_lo = (TLC5947_GS_DATA_SIZE == GS_SIZE_1B) ? (((uint8_t *)gs_data_register)[aindex--]) : (((uint16_t *)gs_data_register)[aindex--]);
+                if (TLC5947_GS_DATA_SIZE == GS_SIZE_1B) {
+                    gvalue_hi = ((uint8_t *)gs_data_register)[aindex--];
+                    gvalue_lo = ((uint8_t *)gs_data_register)[aindex--];
+                    
+                }
+                else { // GS_SIZE_2B
+                    gvalue_hi = ((uint16_t *)gs_data_register)[aindex--];
+                    gvalue_lo = ((uint16_t *)gs_data_register)[aindex--];
+                    
+                }
+                
+                // impose user upper limit
+                if (gvalue_hi > TLC5947_MAX_GS_VALUE) {
+                    gvalue_hi = TLC5947_MAX_GS_VALUE;
+                }
+                if (gvalue_lo > TLC5947_MAX_GS_VALUE) {
+                    gvalue_lo = TLC5947_MAX_GS_VALUE;   
+                }
                 
                 if (TLC5947_IS_GS_DATA_INVERTED) {
                     gvalue_hi = TLC5947_GS_DATA_INVERT(gvalue_hi);
@@ -387,6 +420,7 @@ status_t TLC5947UpdateCommonShiftRegister(tlc5947_t *driver, void *gs_data_regis
                 driver->common_shift_register[cindex] = gvalue_hi >> 4;
                 driver->common_shift_register[cindex+1] = (gvalue_lo >> 8) + (gvalue_hi << 4);
                 driver->common_shift_register[cindex+2] = gvalue_lo;
+                
             }
         }
     }

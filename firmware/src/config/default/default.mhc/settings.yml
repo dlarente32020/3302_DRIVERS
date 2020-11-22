@@ -1,0 +1,14 @@
+configName: default
+folderName: ''
+format_version: v1.0
+frameworkPath: ../../../../Microchip/Harmony3
+processor: ATSAMC21J18A
+projectName: ''
+settings:
+  PackageFilter: bsp;csp_apps_sam_c20_c21;core;quick_docs;csp;core_apps_sam_c20_c21;
+  FORCE_OPTIMIZATION: 'false'
+  GENERATE_BACKUP: 'true'
+  TRUSTZONE: 'false'
+  CMSISPath: ./dev_packs/arm/CMSIS/5.7.0
+  MERGE_STRATEGY: USER_ALL
+  DFPPath: ./dev_packs/Microchip/SAMC21_DFP/3.5.83/samc21/atdf/ATSAMC21J18A.atdf

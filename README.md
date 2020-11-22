@@ -1,4 +1,13 @@
-AdamElectronics3302MPLABX
+# AdamElectronics3302MPLABX
+
+
+### Update 2020, Nov 05
+
+Please keep in mind that TLC5941-Q1 needs a periodic data stream to work.
+The current configuration assumes a frame refresh rate of 50Hz, so make sure you're writing the TLC5941-Q1 data once every 20ms, even if data didn't changed in the meanwhile.
+
+
+### Update 2020, Nov 01
 
 The driver library consists of three files:
 - tlc59xx.h

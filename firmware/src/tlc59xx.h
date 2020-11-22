@@ -74,7 +74,7 @@ extern "C" {
 /* ===== USER DATA - MODIFY ACCORDING TO YOUR NEEDS ========================= */
 // TLC5941-Q1 driver
 // no of daisy-chained chips
-#define TLC5941Q1_NO_OF_CHIPS                     (4u)
+#define TLC5941Q1_NO_OF_CHIPS                     (68u)
 // no of active channels per chip (max. 16)
 #define TLC5941Q1_NO_OF_ACTIVE_CHANNELS_PER_CHIP  (16u)
 
@@ -95,6 +95,9 @@ extern "C" {
 #define TLC5947_GS_DATA_SIZE                    (GS_SIZE_1B)
 // is GS inverted? (inverted = max value corresponds to minimum duty-cycle))
 #define TLC5947_IS_GS_DATA_INVERTED             (true)
+
+// user settable max gs value (!!! must default to TLC5947_GS_DATA_MAX_VALUE)
+#define TLC5947_MAX_GS_VALUE                    (TLC5947_GS_DATA_MAX_VALUE)
 
 
 /* ===== DRIVER DATA !!! DO NOT TOUCH !!! =================================== */
