@@ -220,7 +220,7 @@ status_t TLC5941Q1InitStruct(tlc5941q1_t *driver, tlc5941q1_interface_t *interfa
     }
     
     // fill CSR with max DC value
-    TLC5941Q1SetCommonShiftRegisterToValue(driver, MODE_DC, TLC5941Q1_DC_DATA_MAX_VALUE);
+    TLC5941Q1SetCommonShiftRegisterToValue(driver, MODE_DC, 0x20 /*TLC5941Q1_DC_DATA_MAX_VALUE*/);
     // write data
     TLC5941Q1WriteData(driver, MODE_DC);
 
